@@ -11,7 +11,7 @@ export default function GoodsList() {
   const products = useSelector(selectFilteredProducts);
   const productsStatus = useSelector((state) => state.products.status);
   const error = useSelector((state) => state.products.error);
-console.log(products.products)
+
   useEffect(() => {
     if (productsStatus === "idle") {
       dispatch(fetchProducts());
@@ -28,10 +28,10 @@ console.log(products.products)
             <h3 className="filter-panel__text-right">Настройки</h3>
           </div>
           <div className="filter-panel__tags">
-            <p className="filter-panel__tags__elem-blue">Мужская одежда</p>
-            <p className="filter-panel__tags__elem-green">Ювелирка</p>
-            <p className="filter-panel__tags__elem-orange">Электроника</p>
-            <p className="filter-panel__tags__elem-pink">Женская одежда</p>
+            <p className="filter-panel__tags__elem-blue">Audio</p>
+            <p className="filter-panel__tags__elem-green">Gaming</p>
+            <p className="filter-panel__tags__elem-orange">Mobile</p>
+            <p className="filter-panel__tags__elem-pink">TV</p>
           </div>
         </div>
         <Box
@@ -45,7 +45,7 @@ console.log(products.products)
             border: "1px solid",
           }}
         >
-          {products.products.slice(0,10).map((product) => (
+          {products.products.slice(0, 10).map((product) => (
             <GoodsItem key={product.id} {...product} />
           ))}
         </Box>

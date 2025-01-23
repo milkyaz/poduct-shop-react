@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setFilter } from "../../store/goodsSlice";
 
 const IMAGES = {
   image1: new URL("./img/React.png", import.meta.url).href,
@@ -37,6 +39,11 @@ function useGeoLocation() {
 
 export default function Header() {
   const { city, lat, lon } = useGeoLocation();
+  const dispatch = useDispatch();
+
+  const handleFilterChange = (event) => {
+    console.log(event.target.value);
+  };
 
   return (
     <header
@@ -82,6 +89,7 @@ export default function Header() {
           <input
             className="search-form__input"
             placeholder="Поиск бренда, товара, категории..."
+            onChange={handleFilterChange}
             style={{
               width: "374px",
               marginLeft: "20px",

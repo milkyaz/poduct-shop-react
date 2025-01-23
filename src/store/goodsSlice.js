@@ -5,7 +5,7 @@ import axios from "axios";
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await axios.get("https://fakestoreapi.in/api/products");
+    const response = await axios.get("https://fakestoreapi.in/api/products?limit=5");
     return response.data;
   }
 );
@@ -45,10 +45,10 @@ export const { setFilter } = productsSlice.actions;
 
 export const selectFilteredProducts = (state) => {
   const { products, filter } = state.products;
+
   if (!filter) {
     return products;
   }
-  return products.filter((product) => product.category === filter);
 };
 
 export default productsSlice.reducer;
