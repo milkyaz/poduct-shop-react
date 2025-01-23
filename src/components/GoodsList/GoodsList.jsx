@@ -1,11 +1,25 @@
 import GoodsItem from "../GoodsItem/GoodsItem";
 import Box from "@mui/material/Box";
 import "./GoodsList.css";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProducts, selectFilteredProducts } from "../../store/goodsSlice";
+import CircularProgress from "@mui/material/CircularProgress";
 
-export default function GoodsList(props) {
-  const { goods = [] } = props;
-
-  {
+export default function GoodsList() {
+  const dispatch = useDispatch();
+  const products = useSelector(selectFilteredProducts);
+  const productsStatus = useSelector((state) => state.products.status);
+  const error = useSelector((state) => state.products.error);
+console.log(products.products)
+  useEffect(() => {
+    if (productsStatus === "idle") {
+      dispatch(fetchProducts());
+    }
+  }, [productsStatus, dispatch]);
+  if (productsStatus === "loading") {
+    return <CircularProgress />;
+  } else if (productsStatus === "succeeded") {
     return (
       <>
         <div className="filter-panel">
@@ -31,11 +45,13 @@ export default function GoodsList(props) {
             border: "1px solid",
           }}
         >
-          {goods.map((product) => (
+          {products.products.slice(0,10).map((product) => (
             <GoodsItem key={product.id} {...product} />
           ))}
         </Box>
       </>
     );
+  } else if (productsStatus === "failed") {
+    return console.log(error);
   }
 }
