@@ -1,57 +1,63 @@
-import GoodsItem from "../GoodsItem/GoodsItem";
 import Box from "@mui/material/Box";
+import GoodsItem from "../GoodsItem/GoodsItem";
+import { useState } from "react";
 import "./GoodsList.css";
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchProducts, selectFilteredProducts } from "../../store/goodsSlice";
-import CircularProgress from "@mui/material/CircularProgress";
 
-export default function GoodsList() {
-  const dispatch = useDispatch();
-  const products = useSelector(selectFilteredProducts);
-  const productsStatus = useSelector((state) => state.products.status);
-  const error = useSelector((state) => state.products.error);
+export default function GoodsList({ goods }) {
+  console.log(goods);
+  const [selectedCategory, setselectedCategory] = useState("All");
+  const [val, setVal] = useState('');
 
-  useEffect(() => {
-    if (productsStatus === "idle") {
-      dispatch(fetchProducts());
-    }
-  }, [productsStatus, dispatch]);
-  if (productsStatus === "loading") {
-    return <CircularProgress />;
-  } else if (productsStatus === "succeeded") {
-    return (
-      <>
-        <div className="filter-panel">
-          <div className="filter-panel__text">
-            <h3 className="filter-panel__text-title">Категории товаров</h3>
-            <h3 className="filter-panel__text-right">Настройки</h3>
-          </div>
-          <div className="filter-panel__tags">
-            <p className="filter-panel__tags__elem-blue">Audio</p>
-            <p className="filter-panel__tags__elem-green">Gaming</p>
-            <p className="filter-panel__tags__elem-orange">Mobile</p>
-            <p className="filter-panel__tags__elem-pink">TV</p>
-          </div>
-        </div>
-        <Box
-          className="box-shop"
-          style={{
-            display: "flex",
-            gap: 40,
-            flexWrap: "wrap",
-            marginTop: 50,
-            width: "916px",
-            border: "1px solid",
-          }}
-        >
-          {products.products.slice(0, 10).map((product) => (
-            <GoodsItem key={product.id} {...product} />
-          ))}
-        </Box>
-      </>
-    );
-  } else if (productsStatus === "failed") {
-    return console.log(error);
+  function handleAdd(e) {
+    setselectedCategory(e.target.value);
   }
+
+  const ItemToFilter = goods.filter((value) => {
+    if (selectedCategory === "All") {
+      return true;
+    } else {
+      return value.category === selectedCategory;
+    }
+  });
+
+  return (
+    <>
+      <div className="filter-panel__tags">
+        <select name="filter" onChange={handleAdd}>
+          <option value="All">All</option>
+          <option value="audio">Audio</option>
+          <option value="gaming">Gaming</option>
+          <option value="mobile">Mobile</option>
+        </select>
+      </div>
+      <Box
+        className="box-shop"
+        style={{
+          display: "flex",
+          gap: 40,
+          flexWrap: "wrap",
+          marginTop: 50,
+          width: "916px",
+          border: "1px solid",
+        }}
+      >
+        {" "}
+        {goods.length > 0 && (
+          <ul>
+            {ItemToFilter.slice(0,5).map((item) => (
+              <GoodsItem
+                key={item.id}
+                name={item.name}
+                category={item.category}
+                {...item}
+              />
+            ))}
+          </ul>
+        )}
+      </Box>
+    </>
+  );
 }
+// {
+//   goods.map((item) => <GoodsItem key={item.id} {...item} />);
+// }
